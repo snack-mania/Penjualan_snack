@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SnackMania - Camilan Lokal Terlezat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fff9f4; color: #333; line-height: 1.6; }
+        
+        header { 
+            background: #fff; padding: 10px 8%; display: flex; 
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); position: fixed; width: 100%; top: 0; z-index: 1000;
+        }
+
+        /* Navigasi Logo */
+        .logo-nav { display: flex; align-items: center; text-decoration: none; }
+        .logo-nav img { width: 50px; height: 50px; margin-right: 10px; }
+        .logo-nav span { font-size: 24px; font-weight: 700; color: #d35400; }
+
+        nav ul { display: flex; list-style: none; align-items: center; }
+        nav ul li { margin-left: 25px; }
+        nav ul li a { text-decoration: none; color: #2c3e50; font-weight: 600; transition: 0.3s; }
+        nav ul li a:hover { color: #e67e22; }
+
+        .cart-btn { background: #d35400; color: white !important; padding: 10px 20px; border-radius: 50px; }
+
+        /* Hero Section dengan Gambar Logo Besar */
+        .hero { 
+            margin-top: 70px;
+            padding: 80px 8%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(135deg, #ff9a44 0%, #fc6076 100%);
+            color: white;
+            min-height: 80vh;
+        }
+        .hero-text { flex: 1; padding-right: 50px; }
+        .hero-text h1 { font-size: 48px; line-height: 1.2; margin-bottom: 20px; }
+        .hero-text p { font-size: 18px; margin-bottom: 30px; opacity: 0.9; }
+        
+        .hero-image { flex: 1; text-align: center; }
+        .hero-image img { 
+            width: 100%; 
+            max-width: 500px; 
+            border-radius: 30px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Produk */
+        .produk-section { padding: 80px 8%; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; }
+        
+        .card { 
+            background: white; border-radius: 20px; overflow: hidden; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s;
+            padding-bottom: 20px;
+        }
+        .card:hover { transform: scale(1.05); }
+        .card img { width: 100%; height: 200px; object-fit: cover; }
+        .card h3 { margin: 15px 0; color: #2c3e50; }
+        .harga { color: #d35400; font-weight: 700; font-size: 20px; display: block; margin-bottom: 15px; }
+
+        .btn-add { 
+            background: #d35400; color: white; border: none; padding: 12px 30px; 
+            border-radius: 10px; cursor: pointer; font-weight: 600; width: 80%;
+        }
+
+        footer { background: #2c3e50; color: white; padding: 40px; text-align: center; }
+
+        @media (max-width: 768px) {
+            .hero { flex-direction: column; text-align: center; padding: 50px 8%; }
+            .hero-text { padding-right: 0; margin-bottom: 40px; }
+            .hero-text h1 { font-size: 32px; }
+        }
+        /* Footer Styling */
+footer {
+    background-color: #2c3e50;
+    color: white;
+    padding: 40px 8% 20px;
+}
+
+.footer-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.footer-box h4 {
+    color: #e74c3c; /* Warna merah tema Anda */
+    margin-bottom: 15px;
+    font-size: 18px;
+}
+
+.footer-box p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #ecf0f1;
+}
+
+/* Link di Footer */
+.contact-link {
+    color: inherit; /* Mengikuti warna teks sekitarnya */
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.contact-link:hover {
+    color: #e74c3c; /* Berubah merah saat disentuh kursor */
+    text-decoration: underline;
+}
+
+.footer-bottom {
+    text-align: center;
+    border-top: 1px solid #3e4f5f;
+    padding-top: 20px;
+    font-size: 12px;
+    color: #bdc3c7;
+}
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo-nav">
+            <img src="logo.png" alt="SnackMania Logo" onerror="this.src='https://i.ibb.co/vYm6FzW/logo.png'">
+            <span>Snack<span>Mania</span></span>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="#">Beranda</a></li>
+                <li><a href="checkout.html" class="cart-btn"> Keranjang <span id="cart-count">0</span></a></li>
+                <li><a href="pembayaran.html" class="cart-btn">pembayaran <span id="cart-count"></span></a></li>
+                 <li><a href="riwayat.html" class="cart-btn">riwayat <span id="cart-count"></span></a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-text">
+            <h1>Camilan Lokal Rasa Premium!</h1>
+            <p>Dari Basreng Pedas hingga Kue Kering Mewah, kami hadirkan cita rasa nusantara langsung ke rumah Anda.</p>
+            <a href="#menu" style="background: white; color: #d35400; padding: 15px 40px; border-radius: 50px; text-decoration: none; font-weight: 700;">Mulai Belanja</a>
+        </div>
+        <div class="hero-image">
+            <img src="logo.png" alt="Branding SnackMania" onerror="this.src='https://i.ibb.co/vYm6FzW/logo.png'">
+        </div>
+    </section>
+
+    <section class="produk-section" id="menu">
+        <h2>Pilihan Camilan Favorit</h2>
+        <div class="grid">
+            <div class="card">
+                <img src="basreng pedas.jpg" alt="Basreng">
+                <h3>Basreng Daun Jeruk</h3>
+                <span class="harga">Rp 25.000</span>
+                <button class="btn-add" onclick="tambahItem('Basreng Daun Jeruk', 25000)">Tambah ke Keranjang</button>
+            </div>
+            <div class="card">
+                <img src="kue kering.jpg" alt="Kue Kering">
+                <h3>Kue Kering premium</h3>
+                <span class="harga">Rp 50.000</span>
+                <div class="option-group">
+                <label for="varian">Pilih Varian Kue:</label>
+                <select id="varian">
+                    <option value="Nastar Wisman">Nastar Selai Nanas Wisman</option>
+                    <option value="Kastengel Keju">Kastengel Edam & Cheddar</option>
+                    <option value="Lidah Kucing">Lidah Kucing Rainbow/Ori</option>
+                    <option value="Putri Salju">Putri Salju Mede</option>
+                    <option value="Sagu Keju">Sagu Keju Lumer</option>
+                </select>
+            </div>
+                <button class="btn-add" onclick="tambahItem('Kue Kering premium', 50000)">Tambah ke Keranjang</button>
+            </div>
+            <div class="card">
+                <img src="singkong pedas.jpg" alt="Keripik">
+                <h3>Keripik Singkong</h3>
+                <span class="harga">Rp 20.000</span>
+                <button class="btn-add" onclick="tambahItem('Keripik Singkong', 20000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="card">
+                <img src="choco mania.jpg" alt="choco">
+                <h3>Choco mania</h3>
+                <span class="harga">Rp 10.000</span>
+                <button class="btn-add" onclick="tambahItem('Keripik Singkong', 10000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="card">
+                <img src="soes.jpg" alt="Keripik">
+                <h3>soes</h3>
+                <span class="harga">Rp 25.000</span>
+                <button class="btn-add" onclick="tambahItem('Keripik Singkong', 25000)">Tambah ke Keranjang</button>
+        </div>
+        <div class="card">
+                <img src="Biskuit.jpg" alt="Keripik">
+                <h3>Biskuit</h3>
+                <span class="harga">Rp 15.000</span>
+                <button class="btn-add" onclick="tambahItem('Keripik Singkong', 15000)">Tambah ke Keranjang</button>
+        </div>
+    </section>
+
+    <footer>
+    <div class="footer-container">
+        <div class="footer-box">
+            <h4>Tentang SnackMania</h4>
+            <p><strong>Owner :</strong> Lisria Rimmauli Limbong</p>
+            <p>Cemilan lokal kualitas premium yang menghadirkan cita rasa autentik daerah langsung ke tangan Anda.</p>
+        </div>
+
+        <div class="footer-box">
+    <h4>Lokasi Galeri</h4>
+    <p>
+        <a href="https://www.google.com/maps/search/?api=1&query=Jln+Pertahanan+Gg+Inpres+DSN+V+Patumbak+Kampung" 
+           target="_blank" 
+           style="text-decoration: none; color: white; opacity: 0.8;">
+           📍 Jln. Pertahanan Gg. Inpres DSN V<br>
+           Patumbak Kampung, Deli Serdang<br>
+           Sumatera Utara<br>
+           <span style="color: #e67e22; font-size: 12px;">(Klik untuk lihat peta 🗺️)</span>
+        </a>
+    </p>
+</div>
+        <div class="footer-box">
+            <h4>Hubungi Kami</h4>
+            <p>📞 WhatsApp: <a href="https://wa.me/6283831288229" class="contact-link">0838-3128-8229</a></p>
+            <p>📧 Email: snackmania@gmail.com</p>
+            <p>⏰ Jam Operasional: 09:00 - 21:00 WIB</p>
+        </div>
+    </div>
+
+    <div class="footer-bottom">
+        <p>&copy; 2026 SnackMania. All Rights Reserved. | Created by Lisria Rimmauli Limbong (22221030)</p>
+    </div>
+</footer>
+    <script>
+        let keranjang = JSON.parse(localStorage.getItem('keranjangSnack')) || [];
+
+        function updateIcon() {
+            document.getElementById('cart-count').innerText = keranjang.length;
+        }
+
+        function tambahItem(nama, harga) {
+            keranjang.push({nama, harga, jumlah: 1});
+            localStorage.setItem('keranjangSnack', JSON.stringify(keranjang));
+            updateIcon();
+            alert(nama + " ditambahkan!");
+        }
+
+        window.onload = updateIcon;
+    </script>
+
+</body>
+</html>

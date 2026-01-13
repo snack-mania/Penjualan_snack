@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - SnackMania</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fff9f4; padding: 100px 8% 50px; }
+        
+        header { 
+            background: #fff; padding: 15px 8%; display: flex; 
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000;
+        }
+        .logo { font-size: 24px; font-weight: 700; color: #e67e22; text-decoration: none; }
+
+        .checkout-container { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .box { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); }
+        
+        h2 { margin-bottom: 20px; color: #2c3e50; font-size: 20px; border-bottom: 2px solid #fdf2e9; padding-bottom: 10px; }
+        input, textarea, select { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 10px; outline: none; }
+        
+        .item-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 14px; border-bottom: 1px dashed #eee; padding-bottom: 5px; }
+        .total-price { font-size: 22px; font-weight: 700; color: #e67e22; text-align: right; margin-top: 20px; }
+
+        .btn-wa { 
+            background: #25d366; color: white; border: none; padding: 15px; 
+            border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer;
+            font-size: 16px; transition: 0.3s; margin-top: 10px;
+        }
+        .btn-wa:hover { background: #128c7e; transform: translateY(-3px); }
+
+        @media (max-width: 768px) { .checkout-container { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">Snack<span>Mania</span></a>
+        <nav><a href="riwayat.html" style="text-decoration:none; color:#e67e22; font-weight:600;">Lihat Riwayat 📜</a></nav>
+    </header>
+
+    <div class="checkout-container">
+        <div class="box">
+            <h2>Data Pengiriman</h2>
+            <form id="formCheckout">
+                <input type="text" id="nama" placeholder="Nama Lengkap" required>
+                <input type="number" id="whatsapp" placeholder="Nomor WhatsApp (Contoh: 0812...)" required>
+                <textarea id="alamat" placeholder="Alamat Lengkap Pengiriman" rows="4" required></textarea>
+                <select id="metode">
+                    <option value="Transfer Bank">Transfer Bank (BCA/Mandiri)</option>
+                    <option value="E-Wallet">E-Wallet (OVO/DANA/GoPay)</option>
+                    <option value="COD">COD (Hanya Area Tertentu)</option>
+                </select>
+                <button type="submit" class="btn-wa">Konfirmasi & Hubungi WA</button>
+            </form>
+        </div>
+
+        <div class="box">
+            <h2>Ringkasan Belanja</h2>
+            <div id="list-pesanan">
+                </div>
+            <div class="total-price" id="total-harga">Rp 0</div>
+        </div>
+    </div>
+
+    <script>
+        let keranjang = JSON.parse(localStorage.getItem('keranjangSnack')) || [];
+
+        function renderCheckout() {
+            const container = document.getElementById('list-pesanan');
+            let total = 0;
+            container.innerHTML = "";
+
+            keranjang.forEach(item => {
+                const subtotal = item.harga * item.jumlah;
+                total += subtotal;
+                container.innerHTML += `
+                    <div class="item-row">
+                        <span>${item.nama} (x${item.jumlah})</span>
+                        <span>Rp ${subtotal.toLocaleString()}</span>
+                    </div>
+                `;
+            });
+            document.getElementById('total-harga').innerText = "Total: Rp " + total.toLocaleString();
+        }
+
+        document.getElementById('formCheckout').onsubmit = function(e) {
+            e.preventDefault();
+            
+            if(keranjang.length === 0) return alert("Keranjang masih kosong!");
+
+            const nama = document.getElementById('nama').value;
+            const waUser = document.getElementById('whatsapp').value;
+            const alamat = document.getElementById('alamat').value;
+            const metode = document.getElementById('metode').value;
+
+            let totalAkhir = 0;
+            let teksProduk = "";
+            keranjang.forEach((item, i) => {
+                totalAkhir += (item.harga * item.jumlah);
+                teksProduk += `${i+1}. ${item.nama} (${item.jumlah}x)\n`;
+            });
+
+            // 1. SIMPAN KE RIWAYAT PEMBAYARAN (LocalStorage)
+            const riwayat = JSON.parse(localStorage.getItem('riwayatSnack')) || [];
+            const dataPesanan = {
+                id: "SM-" + Date.now(),
+                tanggal: new Date().toLocaleString('id-ID'),
+                pembeli: nama,
+                items: keranjang,
+                total: totalAkhir,
+                status: "Menunggu Pembayaran"
+            };
+            riwayat.push(dataPesanan);
+            localStorage.setItem('riwayatSnack', JSON.stringify(riwayat));
+
+            // 2. FORMAT PESAN WHATSAPP
+            const nomorAdmin = "6283831288229"; // Ganti dengan nomor Anda
+            const pesan = `*PESANAN BARU - SNACKMANIA*\n\n` +
+                          `*Nama:* ${nama}\n` +
+                          `*No WA:* ${waUser}\n` +
+                          `*Alamat:* ${alamat}\n` +
+                          `*Metode:* ${metode}\n\n` +
+                          `*Daftar Belanja:*\n${teksProduk}\n` +
+                          `*Total Bayar: Rp ${totalAkhir.toLocaleString()}*\n\n` +
+                          `Silakan balas pesan ini untuk instruksi pembayaran.`;
+
+            const linkWA = `https://wa.me/${nomorAdmin}?text=${encodeURIComponent(pesan)}`;
+
+            // 3. BERSIHKAN KERANJANG & KIRIM
+            localStorage.removeItem('keranjangSnack');
+            alert("Pesanan disimpan! Anda akan diarahkan ke WhatsApp.");
+            window.location.href = linkWA;
+        };
+
+        window.onload = renderCheckout;
+    </script>
+</body>
+</html>

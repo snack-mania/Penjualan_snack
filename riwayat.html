@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Pesanan - SnackMania</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fff9f4; padding: 100px 8% 50px; }
+        
+        header { 
+            background: #fff; padding: 15px 8%; display: flex; 
+            justify-content: space-between; align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1); position: fixed; width: 100%; top: 0; left: 0; z-index: 1000;
+        }
+        .logo { font-size: 24px; font-weight: 700; color: #e67e22; text-decoration: none; }
+        .logo span { color: #2c3e50; }
+
+        h2 { color: #2c3e50; margin-bottom: 30px; text-align: center; }
+
+        .container-riwayat { max-width: 800px; margin: 0 auto; }
+        
+        /* Desain Kartu Riwayat Bersih */
+        .card-riwayat { 
+            background: white; border-radius: 15px; padding: 25px; 
+            margin-bottom: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            border-left: 6px solid #e67e22; position: relative;
+        }
+        .id-pesanan { font-weight: 600; color: #e67e22; font-size: 14px; display: block; margin-bottom: 5px; }
+        .tanggal { font-size: 12px; color: #999; margin-bottom: 15px; display: block; }
+        
+        .produk-list { border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 10px 0; margin-bottom: 15px; }
+        .produk-item { display: flex; justify-content: space-between; font-size: 14px; margin-bottom: 5px; }
+        
+        .total-akhir { font-size: 18px; font-weight: 700; color: #2c3e50; display: flex; justify-content: space-between; }
+
+        .btn-kembali { 
+            display: inline-block; margin-top: 20px; color: #e67e22; 
+            text-decoration: none; font-weight: 600; font-size: 14px; 
+        }
+        
+        .kosong { text-align: center; padding: 50px; color: #999; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <a href="index.html" class="logo">Snack<span>Mania</span></a>
+        <nav><a href="index.html" style="text-decoration:none; color:#333; font-weight:600;">Beranda</a></nav>
+    </header>
+
+    <div class="container-riwayat">
+        <h2>Riwayat Pesanan Anda</h2>
+        <div id="daftar-riwayat"></div>
+        <a href="index.html" class="btn-kembali">← Lanjut Belanja Lagi</a>
+    </div>
+
+    <script>
+        function muatRiwayat() {
+            const riwayat = JSON.parse(localStorage.getItem('riwayatSnack')) || [];
+            const wadah = document.getElementById('daftar-riwayat');
+
+            if (riwayat.length === 0) {
+                wadah.innerHTML = `<div class="kosong">Belum ada riwayat pesanan. Yuk jajan dulu!</div>`;
+                return;
+            }
+
+            // Urutkan dari yang terbaru tanpa badge status
+            riwayat.reverse().forEach(pesanan => {
+                let htmlProduk = "";
+                pesanan.items.forEach(p => {
+                    htmlProduk += `
+                        <div class="produk-item">
+                            <span>${p.nama} (x${p.jumlah})</span>
+                            <span>Rp ${(p.harga * p.jumlah).toLocaleString()}</span>
+                        </div>
+                    `;
+                });
+
+                wadah.innerHTML += `
+                    <div class="card-riwayat">
+                        <span class="id-pesanan">ID PESANAN: ${pesanan.id}</span>
+                        <span class="tanggal">Waktu Transaksi: ${pesanan.tanggal}</span>
+                        
+                        <div class="produk-list">
+                            ${htmlProduk}
+                        </div>
+                        
+                        <div class="total-akhir">
+                            <span>Total Belanja:</span>
+                            <span>Rp ${pesanan.total.toLocaleString()}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        
+        window.onload = muatRiwayat;
+    </script>
+</body>
+</html>
